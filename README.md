@@ -32,4 +32,54 @@ Test mode enabled.  Disable with -T
     ]
 }
 # svrweb002.example.com
+{
+    "sources": [
+        {
+             ...
+        }
+    ]
+}
+
+# Add a source to a set of collectors (omit -T to run in test mode and not actually change anything)
+> sumoUtil.py -c ".*web.*" -i source.json -o ADD -T
+svrweb001.example.com
+POST'ing the following to https://api.sumologic.com/api/v1/collectors/11233482736/sources
+{
+    "source": {
+            ....
+    }
+}
+<Response [201]>
+201
 ````
+
+# Sample JSON
+The JSON for the collector should be according to SumoLogic's Collector Management API [https://github.com/SumoLogic/sumo-api-doc/wiki/Collector-Management-API].  
+
+````
+{
+    "source": 
+        {
+            "name": "web_access",
+            "alive": true,
+            "automaticDateParsing": true,
+            "blacklist": [],
+            "category": "Application_Web_Apache",
+            "encoding": "UTF-8",
+            "filters": [],
+            "forceTimeZone": false,
+            "multilineProcessingEnabled": false,
+            "pathExpression": "/var/apache2/log/access.log",
+            "sourceType": "LocalFile",
+            "timeZone": "America/Los_Angeles",
+            "useAutolineMatching": true
+        }
+}
+````
+
+For now, I recommend using the -s switch to view the JSON source of a collector you configure through the web and then modify that source for ADD'ing to other collectors.  Be sure to remove the following:
+
++ id 
++ cutoffTimestamp   -- this might go back farther than you want. give this some thought
+
+(In the future, I'd like this utility to help with generating the source by taking the output of -s, stripping the unwanted fields and converting the "sources" field to "source", possibly with an automatic COPY option to clone the source from one collector to another. )
