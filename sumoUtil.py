@@ -32,6 +32,11 @@ if args.testMode:
 
 r = requests.get("https://api.sumologic.com/api/v1/collectors?limit=10000", auth=(username, password))       
 
+if r.status_code != 200: 
+    print("Unable to list collectors. Status Code: " + str(r.status_code) + ".  Check API keys in config.ini")
+    print(r)
+    sys.exit(1)
+
 collectorData = r.json()
 # Find the right collectors
 j = 0
@@ -74,7 +79,6 @@ while j<len(collectorData["collectors"]):
                 r = requests.post(sourcesUrl, json=data, auth=(username, password), headers=headers)
                 r.json()
                 print (r)
-                print (r.status_code)
 
         if args.operation == "UPDATE":    
             if args.infile is None:
@@ -126,6 +130,5 @@ while j<len(collectorData["collectors"]):
                 r = requests.put(sourceUrl, json=data, auth=(username, password), headers=headers)
                 r.json()
                 print (r)
-                print (r.status_code)
 
     j = j + 1
