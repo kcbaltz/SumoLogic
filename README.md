@@ -81,5 +81,7 @@ For now, I recommend using the -s switch to view the JSON source of a collector 
 
 + id 
 + cutoffTimestamp   -- this might go back farther than you want. give this some thought
+ 
+When UPDATE'ing, be sure the name matches as that is what is used to identify the source to be replaced.  
 
 (In the future, I'd like this utility to help with generating the source by taking the output of -s, stripping the unwanted fields and converting the "sources" field to "source", possibly with an automatic COPY option to clone the source from one collector to another. )
