@@ -3,7 +3,8 @@
 # Author: KC Baltz
 #
 import sys, json, os, argparse, re
-import requests # requires that you install it with  'sudo easy_install requests'
+# http://docs.python-requests.org/en/latest/
+import requests 
 import configparser
 
 config = configparser.ConfigParser()
@@ -38,8 +39,6 @@ while j<len(collectorData["collectors"]):
     if args.collectorPattern is not None: 
         p = re.compile(args.collectorPattern)
 
-#    print(collectorData["collectors"][j]["name"])
-#    if args.collectorPattern in collectorData["collectors"][j]["name"]:
     if args.collectorPattern is None or p.match(collectorData["collectors"][j]["name"]):
         print("# " + collectorData["collectors"][j]["name"])
         sourcesUrl = "https://api.sumologic.com/api/v1/collectors/" + str(collectorData["collectors"][j]["id"]) + "/sources"
