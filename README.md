@@ -12,15 +12,17 @@ It uses regular expressions to work with a subset of all the collectors on your 
 Copy config.ini-TEMPLATE to config.ini and then fill it in with the access key from your account. 
 
 #Examples
+## find all the collectors who have "web" in their name
 
 ````
-# find all the collectors who have "web" in their name
 > sumoUtil.py -c ".*web.*" 
 Test mode enabled.  Disable with -T
 # svrweb001.example.com
 # svrweb002.example.com
+````
 
-# Show the Sources for those collectors
+## Show the Sources for those collectors
+````
 > sumoUtil.py -c ".*web.*" -s 
 Test mode enabled.  Disable with -T
 # svrweb001.example.com
@@ -39,18 +41,31 @@ Test mode enabled.  Disable with -T
         }
     ]
 }
+````
 
-# Add a source to a set of collectors (omit -T to run in test mode and not actually change anything)
-> sumoUtil.py -c ".*web.*" -i source.json -o ADD -T
+## Add a source to a set of collectors (append -T to disable test mode which doesn't actually change anything)
+````
+> sumoUtil.py -c ".*web.*" -i source.json -o ADD 
 svrweb001.example.com
 POST'ing the following to https://api.sumologic.com/api/v1/collectors/11233482736/sources
 {
     "source": {
-            ....
+            ...
     }
 }
 <Response [201]>
 201
+````
+## Update a source by name (append -T to disable test mode which doesn't actually change anything)
+````
+> sumoUtil.py -c ".*web.*" -i source.json -o UPDATE 
+svrweb001.example.com
+Would PUT the following to https://api.sumologic.com/api/v1/collectors/13453457/sources/12345678
+{
+    "source": {
+        ...
+    }
+}
 ````
 
 # Sample JSON
