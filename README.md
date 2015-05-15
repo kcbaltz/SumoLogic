@@ -15,15 +15,26 @@ Copy config.ini-TEMPLATE to config.ini and then fill it in with the access key f
 ## Find all the collectors who have "web" in their name
 
 ````
-> sumoUtil.py -c ".*web.*" 
+> sumoUtil.py -c web 
 Test mode enabled.  Disable with -T
 # svrweb001.example.com
 # svrweb002.example.com
+# svrweb003.example.com
+# svrweb004.example.com
+````
+
+## Find the 002 and 003 "web" collectors by regex:
+
+````
+> sumoUtil.py -r ".*web00[23].*" 
+Test mode enabled.  Disable with -T
+# svrweb002.example.com
+# svrweb003.example.com
 ````
 
 ## Show the Sources for those collectors
 ````
-> sumoUtil.py -c ".*web.*" -s 
+> sumoUtil.py -r ".*web.*" -s 
 Test mode enabled.  Disable with -T
 # svrweb001.example.com
 {
@@ -46,7 +57,7 @@ Test mode enabled.  Disable with -T
 ## Add a source to a set of collectors 
 (append -T to disable test mode which doesn't actually change anything)
 ````
-> sumoUtil.py -c ".*web.*" -i source.json -o ADD 
+> sumoUtil.py -r ".*web.*" -i source.json -o ADD 
 svrweb001.example.com
 POST'ing the following to https://api.sumologic.com/api/v1/collectors/11233482736/sources
 {
@@ -60,7 +71,7 @@ POST'ing the following to https://api.sumologic.com/api/v1/collectors/1123348273
 ## Update a source by name
 (append -T to disable test mode which doesn't actually change anything)
 ````
-> sumoUtil.py -c ".*web.*" -i source.json -o UPDATE 
+> sumoUtil.py -r ".*web.*" -i source.json -o UPDATE 
 svrweb001.example.com
 Would PUT the following to https://api.sumologic.com/api/v1/collectors/13453457/sources/12345678
 {
