@@ -43,7 +43,8 @@ Test mode enabled.  Disable with -T
 }
 ````
 
-## Add a source to a set of collectors (append -T to disable test mode which doesn't actually change anything)
+## Add a source to a set of collectors 
+(append -T to disable test mode which doesn't actually change anything)
 ````
 > sumoUtil.py -c ".*web.*" -i source.json -o ADD 
 svrweb001.example.com
@@ -56,7 +57,8 @@ POST'ing the following to https://api.sumologic.com/api/v1/collectors/1123348273
 <Response [201]>
 201
 ````
-## Update a source by name (append -T to disable test mode which doesn't actually change anything)
+## Update a source by name
+(append -T to disable test mode which doesn't actually change anything)
 ````
 > sumoUtil.py -c ".*web.*" -i source.json -o UPDATE 
 svrweb001.example.com
@@ -92,7 +94,7 @@ The JSON for the collector should be according to SumoLogic's Collector Manageme
 }
 ````
 
-For now, I recommend using the -s switch to view the JSON source of a collector you configure through the web and then modify that source for ADD'ing to other collectors.  Be sure to remove the following:
+For now, I recommend using the -s switch to view the JSON source of a collector you configure through the web and then modify that source for ADD'ing to other collectors.  You'll also need to replace the "sources" array with just a single "source" element.  The API does not appear to allow you to add more than one source at a time to a given collector.  Be sure to remove the following:
 
 + id 
 + cutoffTimestamp   -- this might go back farther than you want. give this some thought
