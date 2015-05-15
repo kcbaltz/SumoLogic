@@ -11,8 +11,8 @@ It uses regular expressions to work with a subset of all the collectors on your 
 # Setup
 Copy config.ini-TEMPLATE to config.ini and then fill it in with the access key from your account. 
 
-#Examples
-## find all the collectors who have "web" in their name
+# Usage
+## Find all the collectors who have "web" in their name
 
 ````
 > sumoUtil.py -c ".*web.*" 
