@@ -2,16 +2,43 @@
 
 This is a utility to manage sources on multiple Sumo Logic Collectors at once.  It currently allows you to add and update sources using the SumoLogic REST API
 
-It uses regular expressions to work with a subset of all the collectors on your account.
+It uses substrings or regular expressions to work with a subset of all the collectors on your account.
 
 # Requirements
 + Python 3.x
 + Requests  [http://docs.python-requests.org/en/latest/]
 
 # Setup
-Copy config.ini-TEMPLATE to config.ini and then fill it in with the access key from your account. 
++ Copy config.ini-TEMPLATE to config.ini and then fill it in with the access key from your account.
++ Grant execute permission to the script:  chmod u+x sumoUtil.py
+
 
 # Usage
+````
+./sumoUtil.py --help
+usage: sumoUtil.py [-h] [-c COLLECTORPATTERN] [-r COLLECTORREGEX] [-C] [-s]
+                   [-o OPERATION] [-i INFILE] [-T]
+
+Get Collectors
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -c COLLECTORPATTERN, --collectorPattern COLLECTORPATTERN
+                        Collector name substring to search for
+  -r COLLECTORREGEX, --collectorRegex COLLECTORREGEX
+                        Collector name regex to search for
+  -C, --printCollectors
+                        Default: true
+  -s, --printSources    Dump Sources
+  -o OPERATION, --operation OPERATION
+                        Operation (ADD|UPDATE)
+  -i INFILE, --infile INFILE
+                        Input File (JSON)
+  -T, --disableTestMode
+                        Disable Test Mode
+````
+
+# Examples
 ## Find all the collectors who have "web" in their name
 
 ````
