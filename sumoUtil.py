@@ -18,11 +18,11 @@ if username is None or password is None:
     sys.exit(1)
 
 parser = argparse.ArgumentParser(description='Get Collectors')
-parser.add_argument('-c', '--collectorPattern', dest='collectorPattern', action='store', required=False, help='substring to search for')
-parser.add_argument('-x', '--excludeCollectorPattern', dest='excludeCollectorPattern', action='store', required=False, help='Exclude collectors matching this substring')
-parser.add_argument('-C', '--printCollectors', dest='printCollectors', action='store_const', const=True, required=False, help='print(JSON')
+parser.add_argument('-c', '--collectorPattern', dest='collectorPattern', action='store', required=False, help='Collector name substring to search for')
+parser.add_argument('-r', '--collectorRegex', dest='collectorRegex', action='store', required=False, help='Collector name regex to search for')
+parser.add_argument('-C', '--printCollectors', dest='printCollectors', action='store_const', const=True, required=False, help='Default: true')
 parser.add_argument('-s', '--printSources', dest='printSources', action='store_const', const=True, required=False, help='Dump Sources')
-parser.add_argument('-o', '--operation', dest='operation', action='store', required=False, help='Operation (ADD|...)')
+parser.add_argument('-o', '--operation', dest='operation', action='store', required=False, help='Operation (ADD|UPDATE)')
 parser.add_argument('-i', '--infile', dest='infile', action='store', default=None, required=False, help='Input File (JSON)')
 parser.add_argument('-T', '--disableTestMode', dest='testMode', action='store_const', const=False, default=True, required=False, help='Disable Test Mode')
 args = parser.parse_args()
@@ -38,13 +38,21 @@ if r.status_code != 200:
     sys.exit(1)
 
 collectorData = r.json()
+
+collectorSearchRegex = args.collectorRegex
+
+if collectorSearchRegex is None and args.collectorPattern is not None:
+    collectorSearchRegex = ".*" + args.collectorPattern + ".*"
+         
+if collectorSearchRegex is not None: 
+    p = re.compile(collectorSearchRegex)
+
+
+
 # Find the right collectors
 j = 0
 while j<len(collectorData["collectors"]):
-    if args.collectorPattern is not None: 
-        p = re.compile(args.collectorPattern)
-
-    if args.collectorPattern is None or p.match(collectorData["collectors"][j]["name"]):
+    if collectorSearchRegex is None or p.match(collectorData["collectors"][j]["name"]):
         print("# " + collectorData["collectors"][j]["name"])
         sourcesUrl = "https://api.sumologic.com/api/v1/collectors/" + str(collectorData["collectors"][j]["id"]) + "/sources"
         if args.printCollectors:
