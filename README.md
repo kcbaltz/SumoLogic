@@ -4,6 +4,9 @@ This is a utility to manage sources on multiple Sumo Logic Collectors at once.  
 
 It uses substrings or regular expressions to work with a subset of all the collectors on your account.
 
+# Notes
++ When using ADD/UPDATE, the script will modify the cutoffTimestamp (or add one) set to 24 hours prior.  This is to avoid a large spike in ingestion rates.  Let me know if you want a flag added to make this optional.
+
 # Requirements
 + Python 3.x
 + Requests  [http://docs.python-requests.org/en/latest/]
