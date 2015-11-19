@@ -5,6 +5,7 @@
 import sys, json, os, argparse, re
 # http://docs.python-requests.org/en/latest/
 import requests 
+import time 
 import configparser
 
 config = configparser.ConfigParser()
@@ -74,6 +75,9 @@ while j<len(collectorData["collectors"]):
                 print("Unable to open file (" + args.infile + "):  " + str(ex) + "\n")
                 sys.exit(1)
 
+            # Set cutoff to 24 hours
+            cutoffTime = int((time.time() - 24*60*60) * 1000);
+            data["source"]["cutoffTimestamp"] = cutoffTime  # Now - 24 hours
 
             if args.testMode:
                 print("Would POST the following to " + sourcesUrl)
@@ -125,6 +129,10 @@ while j<len(collectorData["collectors"]):
     
             # replace the id so we get a good match
             data["source"]["id"] = source["id"] 
+            # Set cutoff to 24 hours
+            cutoffTime = int((time.time() - 24*60*60) * 1000);
+            data["source"]["cutoffTimestamp"] = cutoffTime  # Now - 24 hours
+
             if args.testMode:
                 ## Add Header for If-Match
                 print("Would PUT the following to " + sourceUrl)
