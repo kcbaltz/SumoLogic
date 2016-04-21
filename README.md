@@ -4,43 +4,6 @@ This is a utility to manage sources on multiple Sumo Logic Collectors at once.  
 
 It uses substrings or regular expressions to work with a subset of all the collectors on your account.
 
-# Notes
-+ When using ADD/UPDATE, the script will modify the cutoffTimestamp (or add one) set to 24 hours prior.  This is to avoid a large spike in ingestion rates.  Let me know if you want a flag added to make this optional.
-
-# Requirements
-+ Python 3.x
-+ Requests  [http://docs.python-requests.org/en/latest/]
-
-# Setup
-+ Copy config.ini-TEMPLATE to config.ini and then fill it in with the access key from your account.
-+ Grant execute permission to the script:  chmod u+x sumoUtil.py
-
-
-# Usage
-````
-./sumoUtil.py --help
-usage: sumoUtil.py [-h] [-c COLLECTORPATTERN] [-r COLLECTORREGEX] [-C] [-s]
-                   [-o OPERATION] [-i INFILE] [-T]
-
-Get Collectors
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -c COLLECTORPATTERN, --collectorPattern COLLECTORPATTERN
-                        Collector name substring to search for
-  -r COLLECTORREGEX, --collectorRegex COLLECTORREGEX
-                        Collector name regex to search for
-  -C, --printCollectors
-                        Default: true
-  -s, --printSources    Dump Sources
-  -o OPERATION, --operation OPERATION
-                        Operation (ADD|UPDATE)
-  -i INFILE, --infile INFILE
-                        Input File (JSON)
-  -T, --disableTestMode
-                        Disable Test Mode
-````
-
 # Examples
 ## Find all the collectors who have "web" in their name
 
@@ -118,6 +81,45 @@ Would PUT the following to https://api.sumologic.com/api/v1/collectors/13453457/
         ...
     }
 }
+````
+
+
+
+# Notes
++ When using ADD/UPDATE, the script will modify the cutoffTimestamp (or add one) set to 24 hours prior.  This is to avoid a large spike in ingestion rates.  Let me know if you want a flag added to make this optional.
+
+# Requirements
++ Python 3.x
++ Requests  [http://docs.python-requests.org/en/latest/]
+
+# Setup
++ Copy config.ini-TEMPLATE to config.ini and then fill it in with the access key from your account.
++ Grant execute permission to the script:  chmod u+x sumoUtil.py
+
+
+# Usage
+````
+./sumoUtil.py --help
+usage: sumoUtil.py [-h] [-c COLLECTORPATTERN] [-r COLLECTORREGEX] [-C] [-s]
+                   [-o OPERATION] [-i INFILE] [-T]
+
+Get Collectors
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -c COLLECTORPATTERN, --collectorPattern COLLECTORPATTERN
+                        Collector name substring to search for
+  -r COLLECTORREGEX, --collectorRegex COLLECTORREGEX
+                        Collector name regex to search for
+  -C, --printCollectors
+                        Default: true
+  -s, --printSources    Dump Sources
+  -o OPERATION, --operation OPERATION
+                        Operation (ADD|UPDATE)
+  -i INFILE, --infile INFILE
+                        Input File (JSON)
+  -T, --disableTestMode
+                        Disable Test Mode
 ````
 
 # Sample JSON
