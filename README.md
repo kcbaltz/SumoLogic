@@ -97,6 +97,15 @@ POST'ing the following to https://api.sumologic.com/api/v1/collectors/1123348273
 }
 <Response [201]>
 201
+svrweb002.example.com
+POST'ing the following to https://api.sumologic.com/api/v1/collectors/11233482736/sources
+{
+    "source": {
+            ...
+    }
+}
+<Response [201]>
+201
 ````
 ## Update a source by name
 (append -T to disable test mode which doesn't actually change anything)
@@ -138,7 +147,7 @@ The JSON for the collector should be according to SumoLogic's Collector Manageme
 For now, I recommend using the -s switch to view the JSON source of a collector you configure through the web and then modify that source for ADD'ing to other collectors.  You'll also need to replace the "sources" array with just a single "source" element.  The API does not appear to allow you to add more than one source at a time to a given collector.  Be sure to remove the following:
 
 + id 
-+ cutoffTimestamp   -- this might go back farther than you want. give this some thought
++ cutoffTimestamp   -- The script will automatically modify this to 24 hours ago if you leave it in.  
  
 When UPDATE'ing, be sure the name matches as that is what is used to identify the source to be replaced.  
 
