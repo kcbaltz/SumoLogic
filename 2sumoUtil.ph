@@ -5,7 +5,6 @@
 import sys, json, os, argparse, re
 # http://docs.python-requests.org/en/latest/
 import requests 
-import time 
 import configparser
 
 config = configparser.ConfigParser()
@@ -23,7 +22,7 @@ parser.add_argument('-c', '--collectorPattern', dest='collectorPattern', action=
 parser.add_argument('-r', '--collectorRegex', dest='collectorRegex', action='store', required=False, help='Collector name regex to search for')
 parser.add_argument('-C', '--printCollectors', dest='printCollectors', action='store_const', const=True, required=False, help='Default: true')
 parser.add_argument('-s', '--printSources', dest='printSources', action='store_const', const=True, required=False, help='Dump Sources')
-parser.add_argument('-o', '--operation', dest='operation', action='store', required=False, help='Operation (ADD|UPDATE)')
+parser.add_argument('-o', '--operation', dest='operation', action='store', required=False, help='Operation (ADD|UPDATE|COPY)')
 parser.add_argument('-i', '--infile', dest='infile', action='store', default=None, required=False, help='Input File (JSON)')
 parser.add_argument('-T', '--disableTestMode', dest='testMode', action='store_const', const=False, default=True, required=False, help='Disable Test Mode')
 args = parser.parse_args()
@@ -75,9 +74,6 @@ while j<len(collectorData["collectors"]):
                 print("Unable to open file (" + args.infile + "):  " + str(ex) + "\n")
                 sys.exit(1)
 
-            # Set cutoff to 24 hours
-            cutoffTime = int((time.time() - 24*60*60) * 1000);
-            data["source"]["cutoffTimestamp"] = cutoffTime  # Now - 24 hours
 
             if args.testMode:
                 print("Would POST the following to " + sourcesUrl)
@@ -122,8 +118,6 @@ while j<len(collectorData["collectors"]):
                     print("Found matching source: " + source["name"] + " with ETAG " + etag)
 #                    print(json.dumps(source, indent=4, sort_keys=True ))
                     found = True
-                    break;
-
 
             if found is False:
                 print("No source found to match: " + data["source"]["name"])
@@ -131,11 +125,49 @@ while j<len(collectorData["collectors"]):
     
             # replace the id so we get a good match
             data["source"]["id"] = source["id"] 
+            if args.testMode:
+                ## Add Header for If-Match
+                print("Would PUT the following to " + sourceUrl)
+                print(json.dumps(data, indent=4, sort_keys=True ))
+            else:
+                # Do it 
+                print("PUT'ing the following to " + sourceUrl)
+                print(json.dumps(data, indent=4, sort_keys=True ))
+                headers = {'Content-Type': 'application/json', 'If-Match': etag }
+                
+                r = requests.put(sourceUrl, json=data, auth=(username, password), headers=headers)
+                r.json()
+                print (r)
 
-            # Set cutoff to 24 hours
-            cutoffTime = int((time.time() - 24*60*60) * 1000);
-            data["source"]["cutoffTimestamp"] = cutoffTime  # Now - 24 hours
+        if args.operation == "COPY":    
 
+            # 
+
+
+            # Find ETAG for source to update
+            r = requests.get("https://api.sumologic.com/api/v1/collectors/" + str(collectorData["collectors"][j]["id"]) + "/sources", auth=(username, password))
+            r.headers
+            sourceJson = r.json()
+
+            k = 0
+            sourceUrl = None
+            found = False
+            for source in sourceJson["sources"]:
+                print("source name: " + source["name"] + ", data name: " + data["source"]["name"])
+                if source["name"] == data["source"]["name"]:
+                    sourceUrl = "https://api.sumologic.com/api/v1/collectors/" + str(collectorData["collectors"][j]["id"]) + "/sources/" + str(source["id"])
+                    r2 = requests.get(sourceUrl, auth=(username, password))
+                    etag = r2.headers["etag"]
+                    print("Found matching source: " + source["name"] + " with ETAG " + etag)
+#                    print(json.dumps(source, indent=4, sort_keys=True ))
+                    found = True
+
+            if found is False:
+                print("No source found to match: " + data["source"]["name"])
+                sys.exit(1)
+    
+            # replace the id so we get a good match
+            data["source"]["id"] = source["id"] 
             if args.testMode:
                 ## Add Header for If-Match
                 print("Would PUT the following to " + sourceUrl)
