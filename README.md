@@ -2,7 +2,7 @@
 
 This is a utility to manage sources on multiple Sumo Logic Collectors at once.  It currently allows you to add and update sources using the SumoLogic REST API
 
-It uses substrings or regular expressions to work with a subset of all the collectors on your account.
+It uses substrings or regular expressions to work with a subset of all the collectors on your account.  With it, you can mass-update similar collectors and sources.  
 
 # Examples
 ## Find all the collectors who have "web" in their name
